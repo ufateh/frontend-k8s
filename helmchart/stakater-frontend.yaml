@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "ufatehu/stakater-frontend:1.5"
+          image: "ufatehu/stakater-frontend:1.6"
           imagePullPolicy: IfNotPresent
           env:
           - name: HELLO_SERVICE_URL
