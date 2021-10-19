@@ -4,13 +4,13 @@ const RC = require('typed-rest-client/RestClient');
 const app = express();
 
 // environment variables
-const HelloServiceURL = process.env.HELLO_SERVICE_URL ? process.env.HELLO_SERVICE_URL : null;
+const HelloServiceURL = process.env.HELLO_SERVICE_URL == undefined ? null : process.env.HELLO_SERVICE_URL;
 //https://gorest.co.in/public/v1/users
 
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-    
+    console.log('helloservice url ',HelloServiceURL)
     let today = new Date();
     let date = today.toLocaleDateString();
     let time = today.toLocaleTimeString([], {
@@ -27,6 +27,9 @@ app.get('/', function (req, res) {
             
             message = message + "--" + r.result.data;
             res.render('hello', { title: 'Hey', message: message });
+        },err=>{
+            console.log(err);
+            res.json(JSON.stringify(err));
         });
     }else{
         res.render('hello', { title: 'Hey', message: message + " <hello service not found!>" });
