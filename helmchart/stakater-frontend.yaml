@@ -1,0 +1,79 @@
+---
+# Source: frontend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release1-frontend
+  labels:
+    helm.sh/chart: frontend-1
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/instance: release1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/instance: release1
+---
+# Source: frontend/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release1-frontend
+  labels:
+    helm.sh/chart: frontend-1
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/instance: release1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: frontend
+      app.kubernetes.io/instance: release1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: frontend
+        app.kubernetes.io/instance: release1
+    spec:
+      containers:
+        - name: frontend
+          image: "ufatehu/stakater-frontend:1.5"
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: HELLO_SERVICE_URL
+            value: http://release1-backend:8080/
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+---
+# Source: frontend/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: release1-frontend
+  labels:
+    helm.sh/chart: frontend-1
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/instance: release1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  rules:
+    - host: 
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: release1-frontend
+              servicePort: 8080
