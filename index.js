@@ -24,8 +24,8 @@ app.get('/', function (req, res) {
         let rest = new RC.RestClient('helloService',
         HelloServiceURL);
         rest.get().then(r=>{
-            
-            message = message + "--" + r.result.data;
+            console.log(r)
+            message = message + "--" + r;
             res.render('hello', { title: 'Hey', message: message });
         },err=>{
             console.log(err);
