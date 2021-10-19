@@ -1,6 +1,6 @@
-const port = 8080;
+const port = 8081;
 const express = require('express')
-const RC = require('typed-rest-client/RestClient');
+const request = require('request');
 const app = express();
 
 // environment variables
@@ -21,21 +21,29 @@ app.get('/', function (req, res) {
     
     let message = date + " " + time;
     if(HelloServiceURL !== null){
-        let rest = new RC.RestClient('helloService',
-        HelloServiceURL);
-        rest.get().then(r=>{
-            console.log(r)
-            message = message + "--" + r;
-            res.render('hello', { title: 'Hey', message: message });
-        },err=>{
-            console.log(err);
-            res.json(JSON.stringify(err));
-        });
+        call(HelloServiceURL)
+    .then(r => {
+        console.log(r)
+        message = message + " " + r;
+        res.render('hello', { title: 'Hey', message: message });
+    })
+    .catch(err => {
+        console.log(err);
+        res.send(err);
+    })
     }else{
         res.render('hello', { title: 'Hey', message: message + " <hello service not found!>" });
     }
 })
 
+function call(url){
+    return new Promise((resolve, reject) => {
+        request(url, { json: true }, (err, res, body) => {
+          if (err) reject(err)
+          resolve(body)
+        });
+    })
+}
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
