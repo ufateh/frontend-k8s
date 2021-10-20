@@ -6,7 +6,7 @@ See index.js file for more details on endpoints.
 It also contains a Dockerfile in case if the service needs to be run in a containerized environment.
 Dockerfile uses a node tag which was choosen based on M1 Macbook. This FROM image have ARM support as well.
 
-helmchart dicrectory is there if you want to deploy this service to a kubernetes cluster.
+frontend dicrectory is there if you want to deploy this service to a kubernetes cluster.
 chart was generated with helm, so a lot of things will be extra in it. These can be utilized/referenced or removed as per need.
 
 .dockerignore contains some of those folder which we do not need in docker image.
